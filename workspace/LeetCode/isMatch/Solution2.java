@@ -16,7 +16,7 @@ package isMatch;
  * Version: 1.0
  */
 public class Solution2 {
-	public boolean isMatch(String s, String p) {
+	public boolean isMatch2(String s, String p) {
         // IMPORTANT: Please reset any member data you declared, as
         // the same Solution instance will be reused for each test case.
         int ps = 0, pp = 0, i, j, k;
@@ -66,6 +66,38 @@ public class Solution2 {
         }
         return p.length() > 0 && p.charAt(pp - 1) == '*';
     }
+	
+	public boolean isMatch(String s, String p) {
+        // IMPORTANT: Please reset any member data you declared, as
+        // the same Solution instance will be reused for each test case.
+		int ps = 0, pp = 0, is, ip;
+        boolean star = false;
+        for(is = 0, ip = 0; ps + is < s.length(); ++is, ++ip){
+            if(pp + ip == p.length()) {
+                if(!star) return false;
+                else {ps++; is = -1; ip = -1;continue;}
+            }
+            switch(p.charAt(pp + ip)){
+            case '?': break;
+            case '*':
+                star = true;
+                ps += is;
+                pp += ip;
+                while(pp < p.length() && p.charAt(pp) == '*') ++pp;
+                if(pp == p.length()) return true;
+                is = -1; ip = -1;
+                break;
+            default:
+                if(p.charAt(pp + ip) != s.charAt(ps + is)){
+                    if(!star) return false;
+                    else {ps++; is = -1; ip = -1;}
+                }
+            }
+        }
+        while(pp + ip < p.length() && p.charAt(pp + ip) == '*') ++ip;
+        return pp + ip == p.length();
+    }
+	
 	/**
 	 * Method Description: 
 	 * Author: zd987 
@@ -78,7 +110,7 @@ public class Solution2 {
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 		Solution2 sol = new Solution2();
-		System.out.println(sol.isMatch("c", "*?*"));
+		System.out.println(sol.isMatch("hi", "*?"));
 	}
 
 }
