@@ -6,7 +6,7 @@
 *
 */
 
-package numDistinct;
+package dp.numDistinct;
 
 /**
  * Class Description:

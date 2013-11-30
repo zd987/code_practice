@@ -6,7 +6,7 @@
 *
 */
 
-package maxSubArray;
+package dp.maxSubArray;
 
 /**
  * Class Description:

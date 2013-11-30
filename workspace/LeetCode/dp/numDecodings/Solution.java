@@ -6,7 +6,7 @@
 *
 */
 
-package numDecodings;
+package dp.numDecodings;
 
 /**
  * Class Description:

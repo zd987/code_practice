@@ -6,7 +6,7 @@
 *
 */
 
-package minimumTotal;
+package dp.minimumTotal;
 
 import java.util.ArrayList;
 import java.util.Arrays;

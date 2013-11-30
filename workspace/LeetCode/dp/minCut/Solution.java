@@ -6,7 +6,7 @@
 *
 */
 
-package minCut;
+package dp.minCut;
 
 import java.util.Arrays;
 
@@ -18,7 +18,26 @@ import java.util.Arrays;
  * Version: 1.0
  */
 public class Solution {
-	public int minCut(String s) {
+    public int minCut(String s) {
+        // IMPORTANT: Please reset any member data you declared, as
+        // the same Solution instance will be reused for each test case.
+        int i, j, k, n = s.length();
+        int[] f = new int[n];
+        boolean[][] p = new boolean[n][n];
+        for(i = 0; i < n; ++i){
+            f[i] = i;
+        }
+        for(i = 0; i < n; ++i){
+            for(j = 0; j <= i; ++j){
+                if(s.charAt(i) == s.charAt(j) && (i - j <= 2 || p[j + 1][i - 1])){
+                    p[j][i] = true;
+                    f[i] = j == 0 ? 0 : Math.min(f[i], f[j - 1] + 1);
+                }
+            }
+        }
+        return f[n - 1];
+    }
+	public int minCut2(String s) {
         // IMPORTANT: Please reset any member data you declared, as
         // the same Solution instance will be reused for each test case.
         int i, j, k, n = s.length();

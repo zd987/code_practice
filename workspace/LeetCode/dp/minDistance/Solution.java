@@ -6,7 +6,7 @@
 *
 */
 
-package minDistance;
+package dp.minDistance;
 
 /**
  * Class Description:

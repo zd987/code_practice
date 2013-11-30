@@ -6,7 +6,7 @@
 *
 */
 
-package maximalRectangle;
+package dp.maximalRectangle;
 
 import java.util.Arrays;
 

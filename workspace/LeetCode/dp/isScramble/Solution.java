@@ -6,7 +6,7 @@
 *
 */
 
-package isScramble;
+package dp.isScramble;
 
 import java.util.HashMap;
 

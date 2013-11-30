@@ -6,7 +6,7 @@
 *
 */
 
-package maxProfit;
+package dp.maxProfit;
 
 /**
  * Class Description:

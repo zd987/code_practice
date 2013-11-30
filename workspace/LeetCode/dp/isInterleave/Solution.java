@@ -6,7 +6,7 @@
 *
 */
 
-package isInterleave;
+package dp.isInterleave;
 
 import java.util.HashMap;
 

@@ -6,7 +6,7 @@
 *
 */
 
-package minPathSum;
+package dp.minPathSum;
 
 /**
  * Class Description:
