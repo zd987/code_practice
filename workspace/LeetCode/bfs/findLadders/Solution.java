@@ -15,6 +15,7 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.Queue;
 
+
 /**
  * Class Description:
  * Author: zd987
@@ -23,76 +24,66 @@ import java.util.Queue;
  * Version: 1.0
  */
 public class Solution {
-	private void r(ArrayList<ArrayList<String>> re, ArrayList<String> cur, String start, String end, 
-        HashMap<String, HashSet<String>> m, HashSet<String> visited){
-        if(end.equals(start)) {
-        	ArrayList<String> tmp = new ArrayList<String>(cur);
-        	Collections.reverse(tmp);
+    private void r(ArrayList<ArrayList<String>> re, ArrayList<String> cur, String end, HashMap<String, ArrayList<String>> m){
+        ArrayList<String> list = m.get(end);
+        if(list == null){
+            ArrayList<String> tmp = new ArrayList<String>(cur);
+            Collections.reverse(tmp);
             re.add(tmp);
             return;
         }
-        if(visited.contains(end)) return;
-        visited.add(end);
-        for(String s : m.get(end)){
-        	cur.add(s);
-        	r(re, cur, start, s, m, visited);
-        	cur.remove(cur.size() - 1);
+        for(String str : list){
+            cur.add(str);
+            r(re, cur, str, m);
+            cur.remove(cur.size() - 1);
         }
     }
     public ArrayList<ArrayList<String>> findLadders(String start, String end, HashSet<String> dict) {
-        int i, j, k, step = 0;
+        int i, j, k;
+        HashMap<String, ArrayList<String>> m = new HashMap<String, ArrayList<String>>();
+        HashSet<String> set = new HashSet<String>();
         Queue<String> q = new LinkedList<String>();
-        HashSet<String> v = new HashSet<String>();
-        HashSet<String> vv = new HashSet<String>();
-        HashMap<String, HashSet<String>> m = new HashMap<String, HashSet<String>>();
         q.offer(start);
-        boolean found = false;
+        m.put(start, null);
+        boolean find = false;
+        ArrayList<ArrayList<String>> re = new ArrayList<ArrayList<String>>();
         while(!q.isEmpty()){
-            boolean update = false;
             int size = q.size();
-            ++step;
-            vv.clear();
+            set.clear();
             for(i = 0; i < size; ++i){
-            	String str = q.poll();
-            	if(v.contains(str)) continue;
-            	v.add(str);
-                StringBuilder cur = new StringBuilder(str);
-                for(j = 0; j < cur.length(); ++j){
-                	char c = cur.charAt(j);
+                String w = q.poll();
+                StringBuilder sb = new StringBuilder(w);
+                for(j = 0; j < w.length(); ++j){
+                    char c = w.charAt(j);
                     for(char ch = 'a'; ch <= 'z'; ++ch){
                     	if(ch == c) continue;
-                    	cur.setCharAt(j, ch);
-                        String ns = cur.toString();
-                    	if(dict.contains(ns)){
-                    	    if(ns.equals(end)) {
-                    			found = true;
-                    		}
-                        	update = true;
-                        	HashSet<String> prev = m.get(ns);
-                        	if(prev == null){
-                        	    prev = new HashSet<String>();
-                        	    prev.add(str);    
-                        	    m.put(ns, prev);
-                        	    vv.add(ns);
-                        	} else if(vv.contains(ns)) {
-                        	    prev.add(str);    
-                        	}
-                        	q.offer(ns);
-                        }
+                        sb.setCharAt(j, ch);
+                        String tw = sb.toString();
+                        ArrayList<String> list = m.get(tw);
+                        if(end.equals(tw)){
+                            find = true;
+                            ArrayList<String> cur = new ArrayList<String>();
+                            cur.add(end);
+                            cur.add(w);
+                            r(re, cur, w, m);
+                        } else if(dict.contains(tw)){
+                            if(!m.containsKey(tw)){
+                                list = new ArrayList<String>();
+                                m.put(tw, list);
+                                list.add(w);
+                                q.offer(tw);
+                                set.add(tw);
+                            }else if(set.contains(tw)){
+                                list.add(w);
+                            }
+                        } 
                     }
-                    cur.setCharAt(j, c);
+                    sb.setCharAt(j, c);
                 }
             }
-            if(found || !update) break;
+            if(find) break;
         }
-		ArrayList<ArrayList<String>> re = new ArrayList<ArrayList<String>>();
-        if(found){
-    		ArrayList<String> curr = new ArrayList<String>();
-    		curr.add(end);
-    		HashSet<String> visited = new HashSet<String>();
-    		r(re, curr, start, end, m, visited);
-        }
-		return re;
+        return re;
     }
     public static void main(String[] args) {
 		Solution sol = new Solution();
