@@ -10,6 +10,8 @@ package bruteForce.permuteUnique;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashSet;
 
 /**
  * Class Description:
@@ -19,29 +21,44 @@ import java.util.Arrays;
  * Version: 1.0
  */
 public class Solution {
-    private void r(int[] num, int k, ArrayList<Integer> cur, ArrayList<ArrayList<Integer>> re){
-        if(k == num.length){
+	void pR2(ArrayList<ArrayList<Integer>> re, ArrayList<Integer> cur, int[] num, boolean[] b){
+        if(cur.size() == num.length){
             re.add(new ArrayList<Integer>(cur));
             return;
         }
-        for(int i = k; i < num.length; ++i){
-            if(i > k && num[i - 1] == num[i]) continue;
-            int t = num[k];
-            num[k] = num[i];
-            num[i] = t;
-            cur.add(num[k]);
-            r(num, k + 1, cur, re);
+        for(int i = 0; i < num.length; ++i){
+            if(b[i]) continue;
+            if(i > 0 && num[i - 1] == num[i] && !b[i - 1]) continue;
+            cur.add(num[i]);
+            b[i] = true;
+            pR2(re, cur, num, b);
             cur.remove(cur.size() - 1);
-            t = num[k];
-            num[k] = num[i];
-            num[i] = t;
+            b[i] = false;
+        }
+    }
+	void pR(ArrayList<ArrayList<Integer>> re, ArrayList<Integer> cur, int[] num, int start){
+        if(cur.size() == num.length){
+            re.add(new ArrayList<Integer>(cur));
+            return;
+        }
+        HashSet<Integer> set = new HashSet<Integer>();
+        for(int i = start; i < num.length; ++i){
+            if(!set.contains(num[i])){
+                cur.add(num[i]);
+                num[i] = num[start];
+                pR(re, cur, num, start + 1);
+                num[i] = cur.get(cur.size() - 1);
+                cur.remove(cur.size() - 1);
+                set.add(num[i]);
+            }
         }
     }
     public ArrayList<ArrayList<Integer>> permuteUnique(int[] num) {
-    	Arrays.sort(num);
+        // Start typing your Java solution below
+        // DO NOT write main() function
         ArrayList<Integer> cur = new ArrayList<Integer>();
         ArrayList<ArrayList<Integer>> re = new ArrayList<ArrayList<Integer>>();
-        r(num, 0, cur, re);
+        pR(re, cur, num, 0);
         return re;
     }
     public static void main(String[] args) {
