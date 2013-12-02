@@ -7,6 +7,7 @@
 */
 
 package maxMsum;
+// 最大M子段和
 //http://acm.hdu.edu.cn/showproblem.php?pid=1024
 //http://www.cnblogs.com/kuangbin/archive/2011/08/04/2127085.html
 /**
