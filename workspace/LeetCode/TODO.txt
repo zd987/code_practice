@@ -7,3 +7,4 @@ http://oj.leetcode.com/problems/jump-game-ii/
 最大m子段和
 System Design: 
 how to design git?
+NIM游戏

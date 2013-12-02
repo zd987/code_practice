@@ -6,7 +6,7 @@
 *
 */
 
-package sqrt;
+package divideConquer.sqrt;
 
 /**
  * Class Description:
