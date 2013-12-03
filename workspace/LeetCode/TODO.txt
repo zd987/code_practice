@@ -5,7 +5,7 @@ http://oj.leetcode.com/problems/word-ladder-ii/
 http://oj.leetcode.com/problems/jump-game-ii/
 http://oj.leetcode.com/problems/minimum-window-substring/
 
-×î´óm×Ó¶ÎºÍ
+æœ€å¤§må­æ®µå’Œ
 System Design: 
 how to design git?
-NIMÓÎÏ·
+NIMæ¸¸æˆ
