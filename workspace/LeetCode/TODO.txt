@@ -3,6 +3,7 @@ http://oj.leetcode.com/problems/palindrome-partitioning-ii/
 http://oj.leetcode.com/problems/word-break-ii/
 http://oj.leetcode.com/problems/word-ladder-ii/
 http://oj.leetcode.com/problems/jump-game-ii/
+http://oj.leetcode.com/problems/minimum-window-substring/
 
 最大m子段和
 System Design: 
