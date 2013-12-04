@@ -4,8 +4,12 @@ http://oj.leetcode.com/problems/word-break-ii/
 http://oj.leetcode.com/problems/word-ladder-ii/
 http://oj.leetcode.com/problems/jump-game-ii/
 http://oj.leetcode.com/problems/minimum-window-substring/
+http://oj.leetcode.com/problems/largest-rectangle-in-histogram/
+http://oj.leetcode.com/problems/container-with-most-water/
 
 最大m子段和
 System Design: 
 how to design git?
 NIM游戏
+手写代码！
+数学表达式判断
