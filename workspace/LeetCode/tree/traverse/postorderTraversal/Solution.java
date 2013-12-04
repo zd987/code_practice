@@ -6,7 +6,7 @@
 *
 */
 
-package tree.postorderTraversal;
+package tree.traverse.postorderTraversal;
 
 import java.util.ArrayList;
 import java.util.HashSet;

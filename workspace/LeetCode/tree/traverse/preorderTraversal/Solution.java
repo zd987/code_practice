@@ -6,7 +6,7 @@
 *
 */
 
-package tree.preorderTraversal;
+package tree.traverse.preorderTraversal;
 
 import java.util.ArrayList;
 import java.util.Stack;
