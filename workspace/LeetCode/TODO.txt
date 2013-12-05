@@ -10,6 +10,9 @@ http://oj.leetcode.com/problems/regular-expression-matching/
 http://oj.leetcode.com/problems/wildcard-matching/
 http://oj.leetcode.com/problems/search-in-rotated-sorted-array/
 http://oj.leetcode.com/problems/search-in-rotated-sorted-array-ii/
+http://oj.leetcode.com/problems/median-of-two-sorted-arrays/
+http://oj.leetcode.com/problems/longest-consecutive-sequence/
+http://oj.leetcode.com/problems/gas-station/
 
 最大m子段和
 System Design: 
@@ -18,3 +21,6 @@ NIM游戏
 手写代码！
 数学表达式判断
 3. 设计一个数据结构支持O(1)的insert， remove， find random（老题）
+
+tip:
+看到无序，又要求O(n),应该往Hash上想
