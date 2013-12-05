@@ -6,7 +6,7 @@
 *
 */
 
-package arrays.findMedianSortedArrays;
+package array.findMedianSortedArrays;
 
 /**
  * Class Description:

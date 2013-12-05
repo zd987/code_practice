@@ -6,7 +6,7 @@
 *
 */
 
-package isMatch;
+package string.isMatch;
 
 /**
  * Class Description: Regular Expression Matching 
