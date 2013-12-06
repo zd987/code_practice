@@ -71,6 +71,8 @@ public class Solution {
 			chs[i] = ss[i].toCharArray();
 		}
 		sol.isValidSudoku(chs);
+		int d = 20;
+		d %= 3;
 		System.out.println(Integer.MAX_VALUE);
 	}
 }
