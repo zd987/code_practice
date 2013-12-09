@@ -25,3 +25,6 @@ NIM游戏
 
 tip:
 看到无序，又要求O(n),应该往Hash上想
+并查集 
+LCA RMQ
+TRIE树
