@@ -1,5 +1,4 @@
-http://oj.leetcode.com/problems/palindrome-partitioning-ii/
-11.30, 
+http://oj.leetcode.com/problems/palindrome-partitioning-ii/ 11.30, 
 http://oj.leetcode.com/problems/word-break-ii/
 http://oj.leetcode.com/problems/word-ladder-ii/
 http://oj.leetcode.com/problems/jump-game-ii/
@@ -12,7 +11,7 @@ http://oj.leetcode.com/problems/search-in-rotated-sorted-array/
 http://oj.leetcode.com/problems/search-in-rotated-sorted-array-ii/
 http://oj.leetcode.com/problems/median-of-two-sorted-arrays/
 http://oj.leetcode.com/problems/longest-consecutive-sequence/
-http://oj.leetcode.com/problems/gas-station/
+http://oj.leetcode.com/problems/gas-station/ 12.10,
 http://oj.leetcode.com/problems/linked-list-cycle-ii/ slow和fast起点的注意
 
 最大m子段和
