@@ -1,53 +1,79 @@
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Set;
+import java.util.LinkedList;
+import java.util.Queue;
 
 public class Solution {
-    public ArrayList<String> wordBreak(String s, Set<String> dict) {
-            ArrayList<ArrayList<Integer>> list = new ArrayList<ArrayList<Integer>>();
-            boolean[] f = new boolean[s.length() + 1];
-            Arrays.fill(f, false);
-            f[0] = true;
-            int i, j, k; 
-            for(i = 1; i <= s.length(); ++i){
-                    ArrayList<Integer> pre = new ArrayList<Integer>();
-                    list.add(pre); 
-                    for(j = i - 1; j >= 0; --j){
-                            if(f[j] && dict.contains(s.substring(j, i))){
-                                    pre.add(j);
-                                    f[i] = true;
+    private void r(String start, ArrayList<ArrayList<String>> re, ArrayList<String> cur, 
+        HashMap<String, ArrayList<String>> m, String word){
+            if(word.equals(start)){
+            	ArrayList<String> tmp = new ArrayList<String>(cur);
+                Collections.reverse(tmp);
+                re.add(tmp);
+                return;
+            }
+            ArrayList<String> list = m.get(word);
+            for(String s : list){
+            	cur.add(s);
+            	r(start, re, cur, m, s);
+            	cur.remove(cur.size() - 1);
+            }
+        }
+    public ArrayList<ArrayList<String>> findLadders(String start, String end, HashSet<String> dict) {
+        HashMap<String, ArrayList<String>> m = new HashMap<String, ArrayList<String>>();
+        Queue<String> q = new LinkedList<String>();
+        q.offer(start);
+        boolean find = false;
+        int i, j, k;
+        HashSet<String> visited = new HashSet<String>();
+        while(!q.isEmpty() && !find){
+            int qsize = q.size();
+            HashSet<String> cur = new HashSet<String>();
+            for(k = 0; k < qsize; ++k){
+                String str = q.poll();
+                for(i = 0; i < str.length(); ++i){
+                    char ch = str.charAt(i);
+                    for(char c = 'a'; c <= 'z'; ++c){
+                        if(c != ch){
+                            StringBuilder sb = new StringBuilder(str);
+                            sb.setCharAt(i, c);
+                            String s = sb.toString();
+                            if(s.equals(end)) find = true;
+                            if((s.equals(end) || dict.contains(s)) && !visited.contains(s)){
+                                ArrayList<String> list = m.get(s);
+                                if(list == null){
+                                    list = new ArrayList<String>();
+                                    m.put(s, list);
+                                }
+                                list.add(str);
+                                if(!cur.contains(s)){
+                                    q.offer(s);
+                                }
+                                cur.add(s);
                             }
+                        }
                     }
+                }
             }
-            ArrayList<String> re = new ArrayList<String>();
-            ArrayList<String> cur = new ArrayList<String>();
-            buildString(s, list, s.length(), re, cur);
-            return re;
-    }
-    private void buildString(String s, ArrayList<ArrayList<Integer>> list, int pos, ArrayList<String> re, ArrayList<String> cur){
-            int i, j, k;
-            if(pos == 0){
-                    StringBuilder sb = new StringBuilder();
-                    sb.append(cur.get(cur.size() - 1));
-                    for(i = cur.size() - 2; i >= 0; --i){
-                            sb.append(" ");
-                            sb.append(cur.get(i));
-                    }
-                    re.add(sb.toString());
-                    return;
-            }
-            for(Integer p : list.get(pos - 1)){
-                    cur.add(s.substring(p, pos));
-                    buildString(s, list, p, re, cur);
-                    cur.remove(cur.size() - 1);
-            }
+            visited.addAll(cur);
+        }
+        ArrayList<ArrayList<String>> re = new ArrayList<ArrayList<String>>();
+        if(find){
+	        ArrayList<String> cur = new ArrayList<String>();
+	        cur.add(end);
+	        r(start, re, cur, m, end);
+        }
+        return re;
     }
     public static void main(String[] args) {
-		Set<String> set = new HashSet<String>();
-		set.add("a");
-		set.add("b");
+		String start = "hot";
+		String end = "dog";
+		String[] ar = {"hot","dog"};
+		HashSet<String> dict = new HashSet<String>();
+		for(String s : ar) dict.add(s);
 		Solution sol = new Solution();
-		sol.wordBreak("ab", set);
+		sol.findLadders(start, end, dict);
 	}
 }

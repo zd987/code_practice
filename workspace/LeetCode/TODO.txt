@@ -1,6 +1,6 @@
 http://oj.leetcode.com/problems/palindrome-partitioning-ii/ 11.30, 
 http://oj.leetcode.com/problems/word-break-ii/ 12.15
-http://oj.leetcode.com/problems/word-ladder-ii/
+http://oj.leetcode.com/problems/word-ladder-ii/ 12.19
 http://oj.leetcode.com/problems/jump-game-ii/, 12.15, still hard to solve using greedy.
 http://oj.leetcode.com/problems/minimum-window-substring/
 http://oj.leetcode.com/problems/largest-rectangle-in-histogram/
@@ -9,8 +9,8 @@ http://oj.leetcode.com/problems/regular-expression-matching/
 http://oj.leetcode.com/problems/wildcard-matching/
 http://oj.leetcode.com/problems/search-in-rotated-sorted-array/
 http://oj.leetcode.com/problems/search-in-rotated-sorted-array-ii/
-http://oj.leetcode.com/problems/median-of-two-sorted-arrays/
-http://oj.leetcode.com/problems/longest-consecutive-sequence/
+http://oj.leetcode.com/problems/median-of-two-sorted-arrays/ 12.18 still try several times to reach accepted.
+http://oj.leetcode.com/problems/longest-consecutive-sequence/ 12.18,
 http://oj.leetcode.com/problems/gas-station/ 12.10,
 http://oj.leetcode.com/problems/linked-list-cycle-ii/ slow和fast起点的注意
 
