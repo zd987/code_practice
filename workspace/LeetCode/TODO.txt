@@ -4,9 +4,9 @@ http://oj.leetcode.com/problems/word-ladder-ii/ 12.19
 http://oj.leetcode.com/problems/jump-game-ii/, 12.15, still hard to solve using greedy.
 http://oj.leetcode.com/problems/minimum-window-substring/ 12.20
 http://oj.leetcode.com/problems/largest-rectangle-in-histogram/ 12.20
-http://oj.leetcode.com/problems/container-with-most-water/
-http://oj.leetcode.com/problems/regular-expression-matching/
-http://oj.leetcode.com/problems/wildcard-matching/
+http://oj.leetcode.com/problems/container-with-most-water/ 12.21, easy
+http://oj.leetcode.com/problems/regular-expression-matching/ 12.21
+http://oj.leetcode.com/problems/wildcard-matching/ 12.22, still feel hard
 http://oj.leetcode.com/problems/search-in-rotated-sorted-array/
 http://oj.leetcode.com/problems/search-in-rotated-sorted-array-ii/
 http://oj.leetcode.com/problems/median-of-two-sorted-arrays/ 12.18 still try several times to reach accepted.
