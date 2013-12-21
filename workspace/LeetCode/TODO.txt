@@ -2,8 +2,8 @@ http://oj.leetcode.com/problems/palindrome-partitioning-ii/ 11.30,
 http://oj.leetcode.com/problems/word-break-ii/ 12.15
 http://oj.leetcode.com/problems/word-ladder-ii/ 12.19
 http://oj.leetcode.com/problems/jump-game-ii/, 12.15, still hard to solve using greedy.
-http://oj.leetcode.com/problems/minimum-window-substring/
-http://oj.leetcode.com/problems/largest-rectangle-in-histogram/
+http://oj.leetcode.com/problems/minimum-window-substring/ 12.20
+http://oj.leetcode.com/problems/largest-rectangle-in-histogram/ 12.20
 http://oj.leetcode.com/problems/container-with-most-water/
 http://oj.leetcode.com/problems/regular-expression-matching/
 http://oj.leetcode.com/problems/wildcard-matching/
