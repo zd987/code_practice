@@ -1,0 +1,2 @@
+http://www.geeksforgeeks.org/length-of-the-longest-arithmatic-progression-in-a-sorted-array/
+http://www.geeksforgeeks.org/dynamic-programming-set-31-optimal-strategy-for-a-game/
