@@ -7,8 +7,8 @@ http://oj.leetcode.com/problems/largest-rectangle-in-histogram/ 12.20
 http://oj.leetcode.com/problems/container-with-most-water/ 12.21, easy
 http://oj.leetcode.com/problems/regular-expression-matching/ 12.21
 http://oj.leetcode.com/problems/wildcard-matching/ 12.22, still feel hard
-http://oj.leetcode.com/problems/search-in-rotated-sorted-array/
-http://oj.leetcode.com/problems/search-in-rotated-sorted-array-ii/
+http://oj.leetcode.com/problems/search-in-rotated-sorted-array/ 12.22, need to think carefully
+http://oj.leetcode.com/problems/search-in-rotated-sorted-array-ii/ 12.22, still need careful thinking
 http://oj.leetcode.com/problems/median-of-two-sorted-arrays/ 12.18 still try several times to reach accepted.
 http://oj.leetcode.com/problems/longest-consecutive-sequence/ 12.18,
 http://oj.leetcode.com/problems/gas-station/ 12.10,
