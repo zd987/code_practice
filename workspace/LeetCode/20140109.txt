@@ -1,0 +1,1840 @@
+//20140109
+//http://oj.leetcode.com/problems/evaluate-reverse-polish-notation/
+public class Solution {
+    public int evalRPN(String[] tokens) {
+        Stack<Integer> s = new Stack<Integer>();
+        int i, j, k = 0;
+        for(String t : tokens){
+            if(t.length() > 1 || (t.charAt(0) >= '0' && t.charAt(0) <= '9')){
+                s.push(Integer.parseInt(t));
+            } else {
+                i = s.pop();
+                j = s.pop();
+                switch(t.charAt(0)){
+                case '+':
+                    k = j + i;
+                    break;
+                case '-':
+                    k = j - i;
+                    break;
+                case '*':
+                    k = j * i;
+                    break;
+                case '/':
+                    k = j / i;
+                    break;
+                }
+                s.push(k);
+            }
+        }
+        return s.pop();
+    }
+}
+
+//http://oj.leetcode.com/problems/max-points-on-a-line/
+/**
+ * Definition for a point.
+ * class Point {
+ *     int x;
+ *     int y;
+ *     Point() { x = 0; y = 0; }
+ *     Point(int a, int b) { x = a; y = b; }
+ * }
+ */
+public class Solution {
+    public int maxPoints(Point[] points) {
+        int i, j, k, n = points.length, re = 1, max;
+        if(n == 0) return 0;
+        Double slope;
+        for(i = 0; i < n; ++i){
+            k = 0; max = 1;
+            HashMap<Double, Integer> m = new HashMap<Double, Integer>();
+            for(j = i + 1; j < n; ++j){
+                if(points[i].x == points[j].x) {
+                    if(points[i].y == points[j].y) {
+                        ++k;
+                        continue;
+                    }
+                    slope = null;
+                } else if(points[i].y == points[j].y){
+                    slope = 0.0;
+                } else {
+                    slope = (points[i].y - points[j].y) / ((double)(points[i].x - points[j].x));
+                }
+                Integer cnt = m.get(slope);
+                if(cnt == null) {
+                    cnt = 1;
+                }
+                ++cnt;
+                m.put(slope, cnt);
+                max = Math.max(max, cnt);
+            }
+            re = Math.max(re, max + k);
+        }
+        return re;
+    }
+}
+//http://oj.leetcode.com/problems/sort-list/
+/**
+ * Definition for singly-linked list.
+ * class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode(int x) {
+ *         val = x;
+ *         next = null;
+ *     }
+ * }
+ */
+public class Solution {
+    
+    public ListNode sortList(ListNode head) {
+        ListNode p, q;
+        if(head == null || head.next == null) return head;
+        p = head; q = head.next;
+        while(q != null && q.next != null){
+            p = p.next;
+            q = q.next.next;
+        }
+        ListNode head2 = p.next;
+        p.next = null;
+        q = sortList(head2);
+        p = sortList(head);
+        head = null; 
+        ListNode prev = null, cur;
+        while(p != null && q != null){
+            if(p.val < q.val){
+                cur = p;
+                p = p.next;
+            } else {
+                cur = q;
+                q = q.next;
+            }
+            if(prev == null){
+                head = cur;
+            } else {
+                prev.next = cur;
+            }
+            prev = cur;
+        }
+        if(p != null){
+            if(prev == null) {
+                head = p;
+            } else {
+                prev.next = p;
+            }
+        }
+        if(q != null){
+            if(prev == null){
+                head = q;
+            } else {
+                prev.next = q;
+            }
+        }
+        return head;
+    }
+}
+//http://oj.leetcode.com/problems/insertion-sort-list/
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode(int x) {
+ *         val = x;
+ *         next = null;
+ *     }
+ * }
+ */
+public class Solution {
+    public ListNode insertionSortList(ListNode head) {
+        if(head == null || head.next == null) return head;
+        ListNode dummy = new ListNode(-1);
+        dummy.next = null;
+        while(head != null){
+            ListNode t = head;
+            head = head.next;
+            ListNode prev = dummy;
+            ListNode cur = dummy.next;
+            while(cur != null && cur.val < t.val){
+                prev = cur;
+                cur = cur.next;
+            }
+            t.next = prev.next;
+            prev.next = t;
+        }
+        return dummy.next;
+    }
+}
+//http://oj.leetcode.com/problems/lru-cache/
+class Node{
+    int val, key;
+    Node prev, next;
+    public Node(int key, int val){
+    	this.key = key;
+        this.val = val;
+        prev = null;
+        next = null;
+    }
+    @Override
+    public String toString(){
+    	return key + ":" + val;
+    }
+}
+public class LRUCache {
+    Node head, tail;
+    int size, capacity;
+    HashMap<Integer, Node> m;
+    public LRUCache(int capacity) {
+        size = 0;
+        this.capacity = capacity;
+        head = null;
+        tail = null;
+        m = new HashMap<Integer, Node>();
+    }
+    
+    public int get(int key) {
+        Node n = m.get(key);
+        if(n == null) return -1;
+        if(n != head){
+            n.prev.next = n.next;
+            if(n != tail) n.next.prev = n.prev;
+            else tail = tail.prev;
+            head.prev = n;
+            n.prev = null;
+            n.next = head;
+            head = n;
+        }
+        return n.val;
+    }
+    
+    public void set(int key, int value) {
+        Node n = m.get(key);
+        if(n != null){
+            if(n != head){
+                n.prev.next = n.next;
+                if(n != tail) n.next.prev = n.prev;
+                else tail = tail.prev;
+                head.prev = n;
+                n.prev = null;
+                n.next = head;
+                head = n; 
+            }
+            n.val = value;
+        } else {
+            n = new Node(key, value);
+            m.put(key, n);
+            if(size < capacity){
+                if(size == 0){
+                    head = n;
+                    tail = n;
+                } else {
+                    head.prev = n;
+                    n.next = head;
+                    head = n;
+                }
+                ++size;
+            } else {
+            	m.remove(tail.key);
+                if(capacity == 1){
+                    head = n;
+                    tail = n;
+                } else {
+                    tail = tail.prev;
+                    tail.next.prev = null;
+                    tail.next = null;
+                    head.prev = n;
+                    n.next = head;
+                    head = n;
+                }
+            }
+        }
+    }
+    public static void main(String[] args) {
+		LRUCache l = new LRUCache(2);
+		l.set(2, 1);
+		l.set(1, 1);
+		l.set(2, 3);
+		l.set(4, 1);
+		l.get(1);
+		l.get(2);
+	}
+}
+
+//20140110
+//http://oj.leetcode.com/problems/binary-tree-postorder-traversal/
+/**
+ * Definition for binary tree
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode(int x) { val = x; }
+ * }
+ */
+class Item{
+    TreeNode node;
+    int stage;
+    public Item(TreeNode node){
+        this.node = node;
+        stage = 0;
+    }
+}
+public class Solution {
+    public ArrayList<Integer> postorderTraversal(TreeNode root) {
+        ArrayList<Integer> re = new ArrayList<Integer>();
+        Stack<Item> s = new Stack<Item>();
+        if(root == null) return re;
+        s.push(new Item(root));
+        while(!s.isEmpty()){
+            Item it = s.pop();
+            if(it.stage == 0){
+                it.stage = 1;
+                s.push(it);
+                if(it.node.right != null) s.push(new Item(it.node.right));
+                if(it.node.left != null) s.push(new Item(it.node.left));
+            } else {
+                re.add(it.node.val);
+            }
+        }
+        return re;
+    }
+}
+//http://oj.leetcode.com/problems/binary-tree-preorder-traversal/
+/**
+ * Definition for binary tree
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode(int x) { val = x; }
+ * }
+ */
+public class Solution {
+    public ArrayList<Integer> preorderTraversal(TreeNode root) {
+        ArrayList<Integer> re = new ArrayList<Integer>();
+        if(root == null) return re;
+        Stack<TreeNode> s = new Stack<TreeNode>();
+        s.push(root);
+        while(!s.isEmpty()){
+            root = s.pop();
+            re.add(root.val);
+            if(root.right != null) s.push(root.right);
+            if(root.left != null) s.push(root.left);
+        }
+        return re;
+    }
+}
+//http://oj.leetcode.com/problems/reorder-list/
+/**
+ * Definition for singly-linked list.
+ * class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode(int x) {
+ *         val = x;
+ *         next = null;
+ *     }
+ * }
+ */
+public class Solution {
+    private ListNode reverse(ListNode head){
+        ListNode prev = null, cur = head;
+        while(cur != null){
+            ListNode next = cur.next;
+            cur.next = prev;
+            prev = cur;
+            cur = next;
+        }
+        return prev;
+    }
+    public void reorderList(ListNode head) {
+        if(head == null || head.next == null) return;
+        ListNode slow = head, fast = head.next;
+        while(fast != null && fast.next != null){
+            fast = fast.next.next;
+            slow = slow.next;
+        }
+        fast = slow.next;
+        slow.next = null;
+        fast = reverse(fast);
+        while(head != null && fast != null){
+            slow = head.next;
+            head.next = fast;
+            head = slow;
+            slow = fast.next;
+            fast.next = head;
+            fast = slow;
+        }
+        return;
+    }
+}
+//http://oj.leetcode.com/problems/linked-list-cycle-ii/
+/**
+ * Definition for singly-linked list.
+ * class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode(int x) {
+ *         val = x;
+ *         next = null;
+ *     }
+ * }
+ */
+public class Solution {
+    public ListNode detectCycle(ListNode head) {
+        ListNode slow = head, fast = head;
+        while(fast != null && fast.next != null){
+            slow = slow.next;
+            fast = fast.next.next;
+            if(slow == fast){
+                slow = head;
+                while(slow != fast){
+                    slow = slow.next;
+                    fast = fast.next;
+                }
+                return slow;
+            }
+        }
+        return null;
+    }
+}
+//http://oj.leetcode.com/problems/linked-list-cycle/
+/**
+ * Definition for singly-linked list.
+ * class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode(int x) {
+ *         val = x;
+ *         next = null;
+ *     }
+ * }
+ */
+public class Solution {
+    public boolean hasCycle(ListNode head) {
+        ListNode slow = head, fast = head;
+        while(fast != null && fast.next != null){
+            slow = slow.next;
+            fast = fast.next.next;
+            if(slow == fast) return true;
+        }
+        return false;
+    }
+}
+//http://oj.leetcode.com/problems/word-break-ii/
+public class Solution {
+    private void r(String s, ArrayList<String> re, ArrayList<String> cur, HashMap<Integer, ArrayList<Integer>> m, int index){
+        if(index == -1){
+            StringBuilder sb = new StringBuilder();
+            for(int i = cur.size() - 1; i >= 0; --i){
+                sb.append(cur.get(i));
+                sb.append(' ');
+            }
+            re.add(sb.substring(0, sb.length() - 1));
+            return;
+        }
+        ArrayList<Integer> list = m.get(index);
+        for(Integer i : list){
+            cur.add(s.substring(i, index + 1));
+            r(s, re, cur, m, i - 1);
+            cur.remove(cur.size() - 1);
+        }
+    }
+    public ArrayList<String> wordBreak(String s, Set<String> dict) {
+        HashMap<Integer, ArrayList<Integer>> m = new HashMap<Integer, ArrayList<Integer>>();
+        int i, j, k, n = s.length();
+        for(i = 0; i < n; ++i){
+            ArrayList<Integer> list = new ArrayList<Integer>();
+            for(j = 0; j <= i; ++j){
+                if((j == 0 || m.containsKey(j - 1)) && dict.contains(s.substring(j, i + 1))) {
+                    list.add(j);
+                }
+            }
+            if(list.size() > 0) m.put(i, list);
+        }
+        ArrayList<String> re = new ArrayList<String>();
+        ArrayList<String> cur = new ArrayList<String>();
+        if(m.containsKey(n - 1)) {
+            r(s, re, cur, m, n - 1);
+        }
+        return re;
+    }
+}
+//http://oj.leetcode.com/problems/word-break/
+public class Solution {
+    public boolean wordBreak(String s, Set<String> dict) {
+        int i, j, k, n = s.length();
+        boolean[] f = new boolean[n];
+        Arrays.fill(f, false);
+        for(i = 0; i < n; ++i){
+            for(j = 0; j <= i; ++j){
+                if((j == 0 || f[j - 1]) && dict.contains(s.substring(j, i + 1))) {
+                    f[i] = true;
+                    break;
+                }
+            }
+        }
+        return f[n - 1];
+    }
+}
+//http://oj.leetcode.com/problems/copy-list-with-random-pointer/
+/**
+ * Definition for singly-linked list with a random pointer.
+ * class RandomListNode {
+ *     int label;
+ *     RandomListNode next, random;
+ *     RandomListNode(int x) { this.label = x; }
+ * };
+ */
+public class Solution {
+    public RandomListNode copyRandomList(RandomListNode head) {
+        if(head == null) return null;
+        RandomListNode cur = head, p, q, r, t;
+        while(cur != null){
+            t = new RandomListNode(cur.label);
+            p = cur.next;
+            cur.next = t;
+            t.next = p;
+            cur = p;
+        }
+        cur = head;
+        while(cur != null){
+            t = cur.next;
+            if(cur.random != null) t.random = cur.random.next;
+            cur = t.next;
+        }
+        r = head.next; cur = head; q = r;
+        while(cur != null){
+            cur.next = q.next;
+            if(q.next != null) q.next = q.next.next;
+            cur = cur.next;
+            q = q.next;
+        }
+        return r;
+    }
+}
+//20140111
+//http://oj.leetcode.com/problems/single-number-ii/
+public class Solution {
+    public int singleNumber(int[] A) {
+        int i, j, k, n = A.length;
+        int[] f = new int[32];
+        Arrays.fill(f, 0);
+        for(i = 0; i < n; ++i){
+            for(j = 0; j < 32; ++j){
+                if(((A[i] >>> j) & 1) == 1){
+                    f[j] = (f[j] + 1) % 3;
+                }
+            }
+        }
+        k = 0;
+        for(i = 0; i < 32; ++i){
+            if(f[i] != 0) {
+                k = k | (1 << i);
+            }
+        }
+        return k;
+    }
+}
+//http://oj.leetcode.com/problems/single-number/
+public class Solution {
+    public int singleNumber(int[] A) {
+        int re = A[0];
+        for(int i = 1; i < A.length; ++i){
+            re = re ^ A[i];
+        }
+        return re;
+    }
+}
+//http://oj.leetcode.com/problems/candy/
+public class Solution {
+    public int candy(int[] ratings) {
+        int i, j, k, n = ratings.length;
+        int[] f = new int[n];
+        Arrays.fill(f, 1);
+        for(i = 1; i < n; ++i){
+            if(ratings[i] > ratings[i - 1] && f[i] <= f[i - 1]){
+                f[i] = f[i - 1] + 1;
+            }
+        }
+        for(i = n - 2; i >= 0; --i){
+            if(ratings[i] > ratings[i + 1] && f[i] <= f[i + 1]){
+                f[i] = f[i + 1] + 1;
+            }
+        }
+        k = 0;
+        for(i = 0; i < n; ++i) k += f[i];
+        return k;
+    }
+}
+//http://oj.leetcode.com/problems/gas-station/
+public class Solution {
+    public int canCompleteCircuit(int[] gas, int[] cost) {
+        int i, j, k, cur = 0, n = gas.length, re = 0, sum = 0;
+        for(i = 0; i < n; ++i){
+            cur += gas[i] - cost[i];
+            if(cur < 0){
+                re = i + 1;
+                sum += cur;
+                cur = 0;
+            }
+        }
+        if(cur >= 0 && sum + cur >= 0) return re;
+        else return -1;
+    }
+}
+//http://oj.leetcode.com/problems/clone-graph/
+/**
+ * Definition for undirected graph.
+ * class UndirectedGraphNode {
+ *     int label;
+ *     ArrayList<UndirectedGraphNode> neighbors;
+ *     UndirectedGraphNode(int x) { label = x; neighbors = new ArrayList<UndirectedGraphNode>(); }
+ * };
+ */
+public class Solution {
+    public UndirectedGraphNode cloneGraph(UndirectedGraphNode node) {
+        HashMap<Integer, UndirectedGraphNode> m = new HashMap<Integer, UndirectedGraphNode>();
+        Queue<UndirectedGraphNode> q = new LinkedList<UndirectedGraphNode>();
+        Set<UndirectedGraphNode> visited = new HashSet<UndirectedGraphNode>();
+        if(node == null) return null;
+        q.offer(node);
+        UndirectedGraphNode n1, n2;
+        while(!q.isEmpty()){
+            n1 = q.poll();
+            if(visited.contains(n1)) continue;
+            n2 = m.get(n1.label);
+            if(n2== null){
+                n2 = new UndirectedGraphNode(n1.label);
+                m.put(n1.label, n2);
+            }
+            visited.add(n1);
+            for(UndirectedGraphNode n3 : n1.neighbors){
+                if(!visited.contains(n3)){
+                    q.offer(n3);
+                }
+            }
+        }
+        q.offer(node);
+        visited.clear();
+        while(!q.isEmpty()){
+            n1 = q.poll();
+            if(visited.contains(n1)) continue;
+            n2 = m.get(n1.label);
+            visited.add(n1);
+            for(UndirectedGraphNode n3 : n1.neighbors){
+                n2.neighbors.add(m.get(n3.label));
+                if(!visited.contains(n3)){
+                    q.offer(n3);
+                }
+            }
+        }
+        return m.get(node.label);
+    }
+}
+//http://oj.leetcode.com/problems/palindrome-partitioning-ii/
+public class Solution {
+    public int minCut(String s) {
+        int i, j, k, n = s.length();
+        boolean[][] p = new boolean[n][n];
+        int[] f = new int[n];
+        for(i = 0; i < n; ++i){
+            f[i] = i;
+        }
+        for(i = 0; i < n; ++i){
+            for(j = i; j >= 0; --j){
+                if(s.charAt(i) == s.charAt(j) && (i - j <= 2 || p[j + 1][i - 1])){
+                    p[j][i] = true;
+                    if(j == 0) f[i] = 0;
+                    else if(f[j - 1] + 1 < f[i]){
+                        f[i] = f[j - 1] + 1;
+                    }
+                }
+            }
+        }
+        return f[n - 1];
+    }
+}
+//http://oj.leetcode.com/problems/palindrome-partitioning/
+public class Solution {
+    private void r(ArrayList<ArrayList<String>> re, ArrayList<String> cur, int index, String s, 
+        HashMap<Integer, ArrayList<Integer>> m) {
+        if(index == -1){
+            ArrayList<String> t = new ArrayList<String>();
+            t.addAll(cur);
+            Collections.reverse(t);
+            re.add(t);
+            return;
+        }        
+        ArrayList<Integer> list = m.get(index);
+        for(Integer i : list){
+            cur.add(s.substring(i, index + 1));
+            r(re, cur, i - 1, s, m);
+            cur.remove(cur.size() - 1);
+        }
+    }
+    public ArrayList<ArrayList<String>> partition(String s) {
+        int i, j, k, n = s.length();
+        HashMap<Integer, ArrayList<Integer>> m = new HashMap<Integer, ArrayList<Integer>>();
+        boolean[][] p = new boolean[n][n];
+        for(i = 0; i < n; ++i){
+            ArrayList<Integer> list = new ArrayList<Integer>();
+            m.put(i, list);
+            for(j = i; j >= 0; --j){
+                if(s.charAt(i) == s.charAt(j) && (i - j <= 2 || p[j + 1][i - 1])){
+                    list.add(j);
+                    p[j][i] = true;
+                }
+            }
+        }
+        ArrayList<ArrayList<String>> re = new ArrayList<ArrayList<String>>();
+        ArrayList<String> cur = new ArrayList<String>();
+        r(re, cur, n - 1, s, m);
+        return re;
+    }
+}
+//http://oj.leetcode.com/problems/surrounded-regions/
+class Item{
+    int x, y;
+    public Item(int x, int y){
+        this.x = x; 
+        this.y = y;
+    }
+}
+public class Solution {
+    public void solve(char[][] board) {
+        if(board == null || board.length == 0 || board[0].length == 0) return;
+        int i, j, k, m = board.length, n = board[0].length;
+        Queue<Item> q = new LinkedList<Item>();
+        for(i = 0; i < m; ++i){
+            if(board[i][0] == 'O') q.offer(new Item(i, 0));
+            if(board[i][n - 1] == 'O') q.offer(new Item(i, n - 1));
+        }
+        for(i = 0; i < n; ++i){
+            if(board[0][i] == 'O') q.offer(new Item(0, i));
+            if(board[m - 1][i] == 'O') q.offer(new Item(m - 1, i));
+        }
+        while(!q.isEmpty()){
+            Item it = q.poll();
+            if(it.x < 0 || it.x >= m) continue;
+            if(it.y < 0 || it.y >= n) continue;
+            if(board[it.x][it.y] == 'O') {
+                board[it.x][it.y] = 'P';
+                q.offer(new Item(it.x - 1, it.y));
+                q.offer(new Item(it.x + 1, it.y));
+                q.offer(new Item(it.x, it.y - 1));
+                q.offer(new Item(it.x, it.y + 1));
+            }
+        }
+        for(i = 0; i < m; ++i){
+            for(j = 0; j < n; ++j){
+                if(board[i][j] == 'O') board[i][j] = 'X';
+            }
+        }
+        for(i = 0; i < m; ++i){
+            for(j = 0; j < n; ++j){
+                if(board[i][j] == 'P') board[i][j] = 'O';
+            }
+        }
+    }
+}
+//http://oj.leetcode.com/problems/sum-root-to-leaf-numbers/
+/**
+ * Definition for binary tree
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode(int x) { val = x; }
+ * }
+ */
+public class Solution {
+    int cur, sum;
+    private void dfs(TreeNode root){
+        if(root == null) return;
+        cur = cur * 10 + root.val;
+        if(root.left != null) dfs(root.left);
+        if(root.right != null) dfs(root.right);
+        if(root.left == null && root.right == null) {
+            sum += cur;
+        }
+        cur = cur / 10;
+    }
+    public int sumNumbers(TreeNode root) {
+        cur = 0; sum = 0;
+        dfs(root);
+        return sum;
+    }
+}
+//http://oj.leetcode.com/problems/longest-consecutive-sequence/
+public class Solution {
+    public int longestConsecutive(int[] num) {
+        HashMap<Integer, Boolean> m = new HashMap<Integer, Boolean>();
+        int re = 0;
+        int i, j, k, n = num.length;
+        for(i = 0; i < n; ++i){
+            m.put(num[i], false);
+        }
+        for(i = 0; i < n; ++i){
+            Boolean visited = m.get(num[i]);
+            if(visited == null || visited == false){
+                j = num[i] - 1;
+                while(m.containsKey(j)){
+                    m.put(j, true);
+                    --j;
+                }
+                k = num[i] + 1;
+                while(m.containsKey(k)){
+                    m.put(k, true);
+                    ++k;
+                }
+                re = Math.max(re, k - j - 1);
+            }
+        }
+        return re;
+    }
+}
+//http://oj.leetcode.com/problems/word-ladder-ii/
+public class Solution {
+	private void r(ArrayList<ArrayList<String>> re, ArrayList<String> cur, String str, HashMap<String, ArrayList<String>> m){
+		ArrayList<String> list = m.get(str);
+		if(list == null){
+			ArrayList<String> tmp = new ArrayList<String>(cur);
+            Collections.reverse(tmp);
+            re.add(tmp);
+            return;
+		}
+		for(String s : list){
+			cur.add(s);
+			r(re, cur, s,  m);
+			cur.remove(cur.size() - 1);
+		}
+	}
+    public ArrayList<ArrayList<String>> findLadders(String start, String end, HashSet<String> dict) {
+        int i, j, k, n = start.length();
+        HashMap<String, ArrayList<String>> m = new HashMap<String, ArrayList<String>>();
+        Queue<String> q = new LinkedList<String>();
+        q.offer(start);
+        HashSet<String> visited = new HashSet<String>();
+        HashSet<String> set = new HashSet<String>();
+        boolean stop = false;
+        while(!q.isEmpty()){
+        	int qsize = q.size();
+        	set.clear();
+        	for(int qi = 0; qi < qsize; ++qi){
+	            String str = q.poll();
+	            if(visited.contains(str)) continue;
+	            visited.add(str);
+	            for(i = 0; i < n; ++i){
+	                for(char ch = 'a'; ch <= 'z'; ++ch){
+	                	if(ch == str.charAt(i)) continue;
+	                	StringBuilder sb = new StringBuilder(str);
+	                    sb.setCharAt(i, ch);
+	                    String ns = sb.toString();	                    
+	                    if(!visited.contains(ns) && (ns.equals(end) || dict.contains(ns))){
+	                    	ArrayList<String> list = m.get(ns);
+	                    	if(list == null) {
+	                    		list = new ArrayList<String>();
+	                    		m.put(ns, list);
+	                    		q.offer(ns);
+	                    	    set.add(ns);
+	                    	    list.add(str);
+	                    	} else if(set.contains(ns)) {
+	                    	    list.add(str);
+	                    	}
+	                    	if(ns.equals(end)) stop = true;
+	                    }
+	                }
+	            }
+        	}
+        	if(stop) break;
+        }
+        ArrayList<ArrayList<String>> re = new ArrayList<ArrayList<String>>();
+        ArrayList<String> cur = new ArrayList<String>();
+        cur.add(end);
+        if(m.containsKey(end)) r(re, cur, end, m);
+        return re;
+    }
+}
+//http://oj.leetcode.com/problems/word-ladder/
+public class Solution {
+    public int ladderLength(String start, String end, HashSet<String> dict) {
+        int i, j, k, n = start.length(), re = 1;
+        Queue<String> q = new LinkedList<String>();
+        HashSet<String> v = new HashSet<String>();
+        q.offer(start);
+        v.add(start);
+        while(!q.isEmpty()){
+            int qsize = q.size();
+            ++re;
+            for(int qi = 0; qi < qsize; ++qi){
+                String str = q.poll();
+                for(i = 0; i < n; ++i){
+                    for(char ch = 'a'; ch <= 'z'; ++ch){
+                        if(ch == str.charAt(i)) continue;
+                        StringBuilder sb = new StringBuilder(str);
+                        sb.setCharAt(i, ch);
+                        String ns = sb.toString();
+                        if(ns.equals(end)) {
+                            return re;
+                        }
+                        if(!v.contains(ns) && dict.contains(ns)) {
+                            q.offer(ns);
+                            v.add(ns);
+                        }
+                    }
+                }
+            }
+        }
+        return 0;
+    }
+}
+//http://oj.leetcode.com/problems/valid-palindrome/
+public class Solution {
+    private boolean check(char ch){
+        if((ch >= '0' && ch <= '9') || (ch >= 'a' && ch <= 'z') || (ch >= 'A' && ch <= 'Z')) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+    public boolean isPalindrome(String s) {
+        int i, j, k, n = s.length();
+        s = s.toLowerCase();
+        if(n == 0) return true;
+        i = 0; j = n - 1;
+        while(i <= j){
+            if(!check(s.charAt(i))) {
+                ++i;
+            } else if(!check(s.charAt(j))){
+                --j;
+            } else if(s.charAt(i) == s.charAt(j)){
+                ++i;
+                --j;
+            } else {
+                return false;
+            }
+        }
+        return true;
+    }
+}
+//http://oj.leetcode.com/problems/binary-tree-maximum-path-sum/
+/**
+ * Definition for binary tree
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode(int x) { val = x; }
+ * }
+ */
+public class Solution {
+    int max;
+    private int r(TreeNode root) {
+        if(root == null) return 0;
+        int left = 0, right = 0, re = root.val;
+        if(root.left != null) left = r(root.left);
+        if(root.right != null) right = r(root.right);
+        max = Math.max(max, re);
+        max = Math.max(max, re + left);
+        max = Math.max(max, re + right);
+        max = Math.max(max, re + left + right);
+        re = Math.max(re, root.val + left);
+        re = Math.max(re, root.val + right);
+        return re;
+    }
+    public int maxPathSum(TreeNode root) {
+        max = Integer.MIN_VALUE;
+        r(root);
+        return max;
+    }
+}
+//20140112
+//http://oj.leetcode.com/problems/best-time-to-buy-and-sell-stock-iii/
+public class Solution {
+    public int maxProfit(int[] prices) {
+        int i, j, k, n = prices.length;
+        if(n <= 1) return 0;
+        int min = prices[0], s1 = 0, re = 0, max = prices[n - 1];
+        int[] f = new int[n];
+        f[0] = 0;
+        for(i = 1; i < n; ++i){
+            s1 = Math.max(s1, prices[i] - min);
+            f[i] = s1;
+            re = Math.max(f[i], re);
+            min = Math.min(min, prices[i]);
+        }
+        for(i = n - 2; i > 0; --i){
+            re = Math.max(re, max - prices[i] + f[i - 1]);
+            max = Math.max(max, prices[i]);
+        }
+        return re;
+    }
+}
+//http://oj.leetcode.com/problems/best-time-to-buy-and-sell-stock-ii/
+public class Solution {
+    public int maxProfit(int[] prices) {
+        int i, j, k, n = prices.length, re = 0;
+        for(i = 1; i < n; ++i){
+            if(prices[i] > prices[i - 1]) re += prices[i] - prices[i - 1];
+        }
+        return re;
+    }
+}
+//http://oj.leetcode.com/problems/best-time-to-buy-and-sell-stock/
+public class Solution {
+    public int maxProfit(int[] prices) {
+        int i, j, k, n = prices.length;
+        if(n < 2) return 0;
+        int min = prices[0], re = 0;
+        for(i = 1; i < n; ++i){
+            re = Math.max(re, prices[i] - min);
+            min = Math.min(min, prices[i]);
+        }
+        return re;
+    }
+}
+//http://oj.leetcode.com/problems/triangle/
+public class Solution {
+    public int minimumTotal(ArrayList<ArrayList<Integer>> triangle) {
+        int i, j, k, n = triangle.size();
+        if(n == 0) return 0;
+        int[] f = new int[n];
+        Arrays.fill(f, Integer.MAX_VALUE);
+        f[0] = triangle.get(0).get(0);
+        for(i = 1; i < n; ++i){
+            for(j = i; j > 0; --j){
+                f[j] = Math.min(f[j], f[j - 1]) + triangle.get(i).get(j);
+            }
+            f[0] += triangle.get(i).get(0);
+        }
+        int re = Integer.MAX_VALUE;
+        for(i = 0; i < n; ++i){
+            re = Math.min(re, f[i]);
+        }
+        return re;
+    }
+}
+//http://oj.leetcode.com/problems/pascals-triangle-ii/
+public class Solution {
+    public ArrayList<Integer> getRow(int rowIndex) {
+        ArrayList<Integer> f = new ArrayList<Integer>();
+        int i, j, k; 
+        for(i = 0; i <= rowIndex; ++i){
+            f.add(1);
+            for(j = i - 1; j >= 1; --j){
+                f.set(j, f.get(j - 1) + f.get(j));
+            }
+        }
+        return f;
+    }
+}
+//http://oj.leetcode.com/problems/pascals-triangle/
+public class Solution {
+    public ArrayList<ArrayList<Integer>> generate(int numRows) {
+        ArrayList<ArrayList<Integer>> re = new ArrayList<ArrayList<Integer>>();
+        ArrayList<Integer> cur = new ArrayList<Integer>();
+        int i, j, k;
+        for(i = 0; i < numRows; ++i){
+            cur.add(1);
+            for(j = i - 1; j >= 1; --j){
+                cur.set(j, cur.get(j - 1) + cur.get(j));
+            }
+            re.add(new ArrayList<Integer>(cur));
+        }
+        return re;
+    }
+}
+//http://oj.leetcode.com/problems/populating-next-right-pointers-in-each-node-ii/
+/**
+ * Definition for binary tree with next pointer.
+ * public class TreeLinkNode {
+ *     int val;
+ *     TreeLinkNode left, right, next;
+ *     TreeLinkNode(int x) { val = x; }
+ * }
+ */
+public class Solution {
+    public void connect(TreeLinkNode root) {
+        while(root != null){
+            TreeLinkNode node = root;
+            root = null;
+            while(node != null && node.left == null && node.right == null) node = node.next;
+            root = node == null ? null : (node.left != null ? node.left : node.right);
+            while(node != null){
+                TreeLinkNode t = node.next;
+                while(t != null && t.left == null && t.right == null) t = t.next;
+                if(node.left != null){
+                    if(node.right != null) {
+                        node.left.next = node.right;
+                    } else {
+                        node.left.next = t != null ? (t.left != null ? t.left : t.right) : null;
+                    }
+                }
+                if(node.right != null){
+                    node.right.next = t != null ? (t.left != null ? t.left : t.right) : null;
+                }
+                node = t;
+            }
+        }
+    }
+}
+//http://oj.leetcode.com/problems/populating-next-right-pointers-in-each-node/
+/**
+ * Definition for binary tree with next pointer.
+ * public class TreeLinkNode {
+ *     int val;
+ *     TreeLinkNode left, right, next;
+ *     TreeLinkNode(int x) { val = x; }
+ * }
+ */
+public class Solution {
+    public void connect(TreeLinkNode root) {
+        if(root == null) return;
+        if(root.left == null) return;
+        root.left.next = root.right;
+        if(root.next != null) root.right.next = root.next.left;
+        connect(root.left);
+        connect(root.right);
+    }
+}
+//http://oj.leetcode.com/problems/distinct-subsequences/
+public class Solution {
+    public int numDistinct(String S, String T) {
+        int i, j, k, ns = S.length(), nt = T.length();
+        int[][] f = new int[ns + 1][nt + 1];
+        for(i = 0; i <= ns; ++i){
+            for(j = 0; j <= nt; ++j){
+                f[i][j] = 0;
+            }
+        }
+        for(i = 0; i <= ns; ++i){
+            f[i][0] = 1;
+        }
+        for(j = 1; j <= nt; ++j){
+        	for(i = 1; i <= ns; ++i){
+        		f[i][j] = f[i - 1][j];
+                if(S.charAt(i - 1) == T.charAt(j - 1)){
+                    f[i][j] += f[i - 1][j - 1];
+                }
+            }
+        }
+        return f[ns][nt];
+    }
+    public static void main(String[] args) {
+		Solution sol = new Solution();
+		System.out.println(sol.numDistinct("AAbb", "Ab"));
+	}
+}
+//http://oj.leetcode.com/problems/flatten-binary-tree-to-linked-list/
+/**
+ * Definition for binary tree
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode(int x) { val = x; }
+ * }
+ */
+public class Solution {
+    public void flatten(TreeNode root) {
+        if(root == null) return;
+        flatten(root.left);
+        TreeNode prev = null, cur = root.left;
+        while(cur != null){
+            prev = cur;
+            cur = cur.right;
+        }
+        if(prev != null) prev.right = root.right;
+        if(root.left != null){
+            root.right = root.left;
+            root.left = null;
+        }
+        flatten(root.right);
+    }
+}
+//http://oj.leetcode.com/problems/path-sum-ii/
+/**
+ * Definition for binary tree
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode(int x) { val = x; }
+ * }
+ */
+public class Solution {
+    int cur;
+    private void r(ArrayList<ArrayList<Integer>> re, ArrayList<Integer> list, int sum, TreeNode root){
+        if(root == null) return;
+        if(root.left == null && root.right == null && root.val == sum){
+            ArrayList<Integer> tmp = new ArrayList<Integer>(list);
+            tmp.add(root.val);
+            re.add(tmp);
+            return;
+        }
+        list.add(root.val);
+        sum -= root.val;
+        if(root.left != null) r(re, list, sum, root.left);
+        if(root.right != null) r(re, list, sum, root.right);
+        sum += root.val;
+        list.remove(list.size() - 1);
+    }
+    public ArrayList<ArrayList<Integer>> pathSum(TreeNode root, int sum) {
+        ArrayList<ArrayList<Integer>> re = new ArrayList<ArrayList<Integer>>();
+        ArrayList<Integer> list = new ArrayList<Integer>();
+        cur = 0;
+        r(re, list, sum, root);
+        return re;
+    }
+}
+//http://oj.leetcode.com/problems/path-sum/
+/**
+ * Definition for binary tree
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode(int x) { val = x; }
+ * }
+ */
+public class Solution {
+    public boolean hasPathSum(TreeNode root, int sum) {
+        if(root == null) return false;
+        if(root.left == null && root.right == null && root.val == sum) return true;
+        sum -= root.val;
+        return hasPathSum(root.left, sum) || hasPathSum(root.right, sum);
+    }
+}
+//http://oj.leetcode.com/problems/minimum-depth-of-binary-tree/
+/**
+ * Definition for binary tree
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode(int x) { val = x; }
+ * }
+ */
+public class Solution {
+    public int minDepth(TreeNode root) {
+        Queue<TreeNode> q = new LinkedList<TreeNode>();
+        if(root == null) return 0;
+        q.offer(root);
+        int re = 0;
+        while(!q.isEmpty()){
+            int qsize = q.size();
+            ++re;
+            for(int qi = 0; qi < qsize; ++qi){
+                root = q.poll();
+                if(root.left == null && root.right == null) return re;
+                if(root.left != null) q.offer(root.left);
+                if(root.right != null) q.offer(root.right);
+            }
+        }
+        return 0;
+    }
+}
+//http://oj.leetcode.com/problems/balanced-binary-tree/
+/**
+ * Definition for binary tree
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode(int x) { val = x; }
+ * }
+ */
+public class Solution {
+    private int height(TreeNode root){
+        if(root == null) return 0;
+        return Math.max(height(root.left), height(root.right)) + 1;
+    }
+    public boolean isBalanced(TreeNode root) {
+        if(root == null) return true;
+        int lh = height(root.left), rh = height(root.right);
+        return Math.abs(lh - rh) <= 1 && isBalanced(root.left) && isBalanced(root.right);
+    }
+}
+//http://oj.leetcode.com/problems/convert-sorted-list-to-binary-search-tree/
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode(int x) { val = x; next = null; }
+ * }
+ */
+/**
+ * Definition for binary tree
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode(int x) { val = x; }
+ * }
+ */
+public class Solution {
+    public TreeNode sortedListToBST(ListNode head) {
+        if(head == null) return null;
+        if(head.next == null) return new TreeNode(head.val);
+        ListNode prev = null, slow = head, fast = head.next;
+        while(fast != null && fast.next != null){
+            prev = slow;
+            slow = slow.next;
+            fast = fast.next.next;
+        }
+        TreeNode root = new TreeNode(slow.val);
+        if(prev != null) {
+            prev.next = null;
+            root.left = sortedListToBST(head);
+        }
+        root.right = sortedListToBST(slow.next);
+        return root;
+    }
+}
+//http://oj.leetcode.com/problems/convert-sorted-array-to-binary-search-tree/
+/**
+ * Definition for binary tree
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode(int x) { val = x; }
+ * }
+ */
+public class Solution {
+    private TreeNode r(int[] num, int start, int end){
+        if(start > end) return null;
+        int mid = (start + end) / 2;
+        TreeNode root = new TreeNode(num[mid]);
+        root.left = r(num, start, mid - 1);
+        root.right = r(num, mid + 1, end);
+        return root;
+    }
+    public TreeNode sortedArrayToBST(int[] num) {
+        return r(num, 0, num.length - 1);
+    }
+}
+//http://oj.leetcode.com/problems/binary-tree-level-order-traversal-ii/
+/**
+ * Definition for binary tree
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode(int x) { val = x; }
+ * }
+ */
+public class Solution {
+    public ArrayList<ArrayList<Integer>> levelOrderBottom(TreeNode root) {
+        Queue<TreeNode> q = new LinkedList<TreeNode>();
+        ArrayList<ArrayList<Integer>> re = new ArrayList<ArrayList<Integer>>();
+        if(root == null) return re;
+        q.offer(root);
+        while(!q.isEmpty()){
+            int qsize = q.size();
+            ArrayList<Integer> cur = new ArrayList<Integer>();
+            for(int qi = 0; qi < qsize; ++qi){
+                root = q.poll();
+                cur.add(root.val);
+                if(root.left != null) q.offer(root.left);
+                if(root.right != null) q.offer(root.right);
+            }
+            re.add(cur);
+        }
+        Collections.reverse(re);
+        return re;
+    }
+}
+//http://oj.leetcode.com/problems/construct-binary-tree-from-inorder-and-postorder-traversal/
+/**
+ * Definition for binary tree
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode(int x) { val = x; }
+ * }
+ */
+public class Solution {
+    private TreeNode r(int[] inorder, int[] postorder, int iBegin, int iEnd, int pBegin, int pEnd){
+        if(iBegin > iEnd || pBegin > pEnd) return null;
+        TreeNode root = new TreeNode(postorder[pEnd]);
+        int i, j, k;
+        for(i = iBegin; i <= iEnd; ++i){
+            if(inorder[i] == postorder[pEnd]) break;
+        }
+        k = i - iBegin;
+        root.left = r(inorder, postorder, iBegin, i - 1, pBegin, pBegin + k - 1);
+        root.right = r(inorder, postorder, i + 1, iEnd, pBegin + k, pEnd - 1);
+        return root;
+    }
+    public TreeNode buildTree(int[] inorder, int[] postorder) {
+        return r(inorder, postorder, 0, inorder.length - 1, 0, postorder.length - 1);
+    }
+}
+//http://oj.leetcode.com/problems/construct-binary-tree-from-preorder-and-inorder-traversal/
+/**
+ * Definition for binary tree
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode(int x) { val = x; }
+ * }
+ */
+public class Solution {
+    private TreeNode r(int[] preorder, int[] inorder, int pBegin, int pEnd, int iBegin, int iEnd){
+        if(pBegin > pEnd || iBegin > iEnd) return null;
+        TreeNode root = new TreeNode(preorder[pBegin]);
+        int i, j, k;
+        for(i = iBegin; i <= iEnd; ++i){
+            if(inorder[i] == preorder[pBegin]) break;
+        }
+        k = i - iBegin;
+        root.left = r(preorder, inorder, pBegin + 1, pBegin + k, iBegin, i - 1);
+        root.right = r(preorder, inorder, pBegin + k + 1, pEnd, i + 1, iEnd);
+        return root;
+    }
+    public TreeNode buildTree(int[] preorder, int[] inorder) {
+        return r(preorder, inorder, 0, preorder.length - 1, 0, inorder.length - 1);
+    }
+}
+//http://oj.leetcode.com/problems/maximum-depth-of-binary-tree/
+/**
+ * Definition for binary tree
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode(int x) { val = x; }
+ * }
+ */
+public class Solution {
+    public int maxDepth(TreeNode root) {
+        if(root == null) return 0;
+        return Math.max(maxDepth(root.left), maxDepth(root.right)) + 1;
+    }
+}
+//http://oj.leetcode.com/problems/binary-tree-zigzag-level-order-traversal/
+/**
+ * Definition for binary tree
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode(int x) { val = x; }
+ * }
+ */
+public class Solution {
+    public ArrayList<ArrayList<Integer>> zigzagLevelOrder(TreeNode root) {
+        ArrayList<ArrayList<Integer>> re = new ArrayList<ArrayList<Integer>>();
+        ArrayList<Integer> cur;
+        if(root == null) return re;
+        boolean flag = true;
+        Queue<TreeNode> q = new LinkedList<TreeNode>();
+        q.offer(root);
+        while(!q.isEmpty()){
+            int qsize = q.size();
+            cur = new ArrayList<Integer>();
+            for(int qi = 0; qi < qsize; ++qi){
+                root = q.poll();
+                cur.add(root.val);
+                if(root.left != null) q.offer(root.left);
+                if(root.right != null) q.offer(root.right);
+            }
+            if(!flag) Collections.reverse(cur);
+            re.add(cur);
+            flag = !flag;
+        }
+        return re;
+    }
+}
+//http://oj.leetcode.com/problems/binary-tree-level-order-traversal/
+/**
+ * Definition for binary tree
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode(int x) { val = x; }
+ * }
+ */
+public class Solution {
+    public ArrayList<ArrayList<Integer>> levelOrder(TreeNode root) {
+        ArrayList<ArrayList<Integer>> re = new ArrayList<ArrayList<Integer>>();
+        ArrayList<Integer> cur;
+        if(root == null) return re;
+        Queue<TreeNode> q = new LinkedList<TreeNode>();
+        q.offer(root);
+        while(!q.isEmpty()){
+            int qsize = q.size();
+            cur = new ArrayList<Integer>();
+            for(int qi = 0; qi < qsize; ++qi){
+                root = q.poll();
+                cur.add(root.val);
+                if(root.left != null) q.offer(root.left);
+                if(root.right != null) q.offer(root.right);
+            }
+            re.add(cur);
+        }
+        return re;
+    }
+}
+//http://oj.leetcode.com/problems/symmetric-tree/
+/**
+ * Definition for binary tree
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode(int x) { val = x; }
+ * }
+ */
+public class Solution {
+    private boolean r(TreeNode l, TreeNode r){
+        if(l == null && r == null) return true;
+        else if(l == null || r == null) return false;
+        return l.val == r.val && r(l.left, r.right) && r(l.right, r.left);
+    }
+    public boolean isSymmetric(TreeNode root) {
+        if(root == null) return true;
+        return r(root.left, root.right);
+    }
+}
+//http://oj.leetcode.com/problems/same-tree/
+/**
+ * Definition for binary tree
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode(int x) { val = x; }
+ * }
+ */
+public class Solution {
+    public boolean isSameTree(TreeNode p, TreeNode q) {
+        if(p == null && q == null) return true;
+        else if(p == null || q == null) return false;
+        return p.val == q.val && isSameTree(p.left, q.left) && isSameTree(p.right, q.right);
+    }
+}
+//http://oj.leetcode.com/problems/recover-binary-search-tree/
+/**
+ * Definition for binary tree
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode(int x) { val = x; }
+ * }
+ */
+public class Solution {
+    TreeNode prev;
+    TreeNode t1, t2;
+    private void inorder(TreeNode root){
+        if(root == null) return;
+        inorder(root.left);
+        if(prev != null && root.val < prev.val){
+            if(t1 == null) {
+                t1 = prev;
+                t2 = root;
+            } else {
+                t2 = root;
+                return;
+            }
+        }
+        prev = root;
+        inorder(root.right);
+    }
+    public void recoverTree(TreeNode root) {
+        prev = null;
+        t1 = null;
+        t2 = null;
+        inorder(root);
+        int tmp = t1.val;
+        t1.val = t2.val;
+        t2.val = tmp;
+        return;
+    }
+}
+//http://oj.leetcode.com/problems/validate-binary-search-tree/
+/**
+ * Definition for binary tree
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode(int x) { val = x; }
+ * }
+ */
+public class Solution {
+    private boolean r(TreeNode root, int low, int high){
+        if(root == null) return true;
+        if(root.val < low || root.val > high) return false;
+        return r(root.left, low, root.val - 1) && r(root.right, root.val + 1, high);
+    }
+    public boolean isValidBST(TreeNode root) {
+        return r(root, Integer.MIN_VALUE, Integer.MAX_VALUE);
+    }
+}
+//http://oj.leetcode.com/problems/interleaving-string/
+public class Solution {
+    public boolean isInterleave(String s1, String s2, String s3) {
+        int i, j, k, n1 = s1.length(), n2 = s2.length(), n3 = s3.length();
+        if(n3 != n1 + n2) return false;
+        if(n1 == 0) return s2.equals(s3);
+        if(n2 == 0) return s1.equals(s3);
+        boolean[][] f = new boolean[n1 + 1][n2 + 1];
+        for(i = 0; i <= n1; ++i){
+            for(j = 0; j <= n2; ++j){
+                f[i][j] = false;
+            }
+        }
+        f[0][0] = true;
+        for(i = 0; i <= n1; ++i){
+            for(j = 0; j <= n2; ++j){
+                if((i > 0 && f[i - 1][j] && s3.charAt(i + j - 1) == s1.charAt(i - 1)) ||
+                   (j > 0 && f[i][j - 1] && s3.charAt(i + j - 1) == s2.charAt(j - 1))){
+                   f[i][j] = true;
+               } 
+            }
+        }
+        return f[n1][n2];
+    }
+}
+//http://oj.leetcode.com/problems/unique-binary-search-trees-ii/
+/**
+ * Definition for binary tree
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode(int x) { val = x; left = null; right = null; }
+ * }
+ */
+public class Solution {
+    private ArrayList<TreeNode> r(int start, int end){
+        ArrayList<TreeNode> re = new ArrayList<TreeNode>();
+        if(start > end) {
+            re.add(null);
+            return re;
+        }
+        int i, j, k;
+        for(i = start; i <= end; ++i){
+            ArrayList<TreeNode> ll = r(start, i - 1);
+            ArrayList<TreeNode> rr = r(i + 1, end);
+            for(TreeNode ln : ll){
+                for(TreeNode rn : rr){
+                    TreeNode root = new TreeNode(i);
+                    root.left = ln;
+                    root.right = rn;
+                    re.add(root);
+                }
+            }
+        }
+        return re;
+    }
+    public ArrayList<TreeNode> generateTrees(int n) {
+        return r(1, n);   
+    }
+}
+//http://oj.leetcode.com/problems/unique-binary-search-trees/
+public class Solution {
+    public int numTrees(int n) {
+        int i, j, k; 
+        int[] f = new int[n + 1];
+        f[0] = 1; f[1] = 1;
+        for(i = 2; i <= n; ++i){
+            f[i] = 0;
+            for(j = 0; j <= i - 1; ++j){
+                f[i] += f[j] * f[i - 1 - j];
+            }
+        }
+        return f[n];
+    }
+}
+//http://oj.leetcode.com/problems/binary-tree-inorder-traversal/
+/**
+ * Definition for binary tree
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode(int x) { val = x; }
+ * }
+ */
+class Item{
+    TreeNode node;
+    int stage;
+    public Item(TreeNode node){
+        this.node = node;
+        stage = 0;
+    }
+}
+public class Solution {
+    public ArrayList<Integer> inorderTraversal(TreeNode root) {
+        ArrayList<Integer> re = new ArrayList<Integer>();
+        if(root == null) return re;
+        Stack<Item> s = new Stack<Item>();
+        s.push(new Item(root));
+        while(!s.isEmpty()){
+            Item it = s.pop();
+            root = it.node;
+            switch(it.stage){
+            case 0:
+                it.stage = 1;
+                s.push(it);
+                if(root.left != null) s.push(new Item(root.left));
+                break;
+            case 1:
+                re.add(root.val);
+                if(root.right != null) s.push(new Item(root.right));
+                break;
+            }
+        }
+        return re;
+    }
+}
+//http://oj.leetcode.com/problems/restore-ip-addresses/
+public class Solution {
+    private void r(ArrayList<String> re, ArrayList<String> cur, String s){
+        int i, j, k;
+        if(s.length() == 0) return;
+        if(cur.size() == 3) {
+            if(s.length() > 3 || (s.length() > 1 && s.charAt(0) == '0')) return;
+            k = Integer.parseInt(s);
+            if(k >= 0 && k <= 255) {
+                cur.add(s);
+                StringBuilder sb = new StringBuilder();
+                sb.append(cur.get(0));
+                for(i = 1; i <= 3; ++i){
+                    sb.append('.');
+                    sb.append(cur.get(i));
+                }
+                cur.remove(cur.size() - 1);
+                re.add(sb.toString());
+            }
+            return;
+        }
+        if(s.charAt(0) == '0') {
+            cur.add("0");
+            r(re, cur, s.substring(1));
+            cur.remove(cur.size() - 1);
+        } else {
+            j = Math.min(3, s.length());
+            for(i = 0; i < j; ++i){
+                String ss = s.substring(0, i + 1);
+                k = Integer.parseInt(ss);
+                if(k >= 0 && k <= 255) {
+                    cur.add(ss);
+                    r(re, cur, s.substring(i + 1));
+                    cur.remove(cur.size() - 1);
+                }
+            }
+        }
+    }
+    public ArrayList<String> restoreIpAddresses(String s) {
+        ArrayList<String> re = new ArrayList<String>();
+        ArrayList<String> cur = new ArrayList<String>();
+        r(re, cur, s);
+        return re;
+    }
+    public static void main(String[] args) {
+		Solution sol = new Solution();
+		sol.restoreIpAddresses("1111");
+	}
+}
+//http://oj.leetcode.com/problems/reverse-linked-list-ii/
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode(int x) {
+ *         val = x;
+ *         next = null;
+ *     }
+ * }
+ */
+public class Solution {
+    public ListNode reverseBetween(ListNode head, int m, int n) {
+        if(m == n) return head;
+        ListNode prev = null, tail = null, p = head;
+        int i, j, k;
+        for(i = 1; i < m; ++i){
+            prev = p;
+            p = p.next;
+        }
+        for(; i < n; ++i){
+            p = p.next;
+        }
+        tail = p.next;
+        ListNode p1, p2;
+        if(prev == null) {
+            p1 = head;
+        } else {
+            p1 = prev.next;
+        }
+        p = null; 
+        while(p1 != tail){
+            p2 = p1.next;
+            p1.next = p;
+            p = p1;
+            p1 = p2;
+        }
+        if(prev == null) {
+            head.next = tail;
+            head = p;
+        } else {
+            p2 = prev.next;
+            prev.next = p;
+            p2.next = tail;
+        }
+        return head;
+    }
+}
+//http://oj.leetcode.com/problems/subsets-ii/
+public class Solution {
+    private void r(ArrayList<ArrayList<Integer>> re, ArrayList<Integer> cur, int index, int[] num, int n){
+        if(n == 0){
+            re.add(new ArrayList<Integer>(cur));
+            return;
+        }
+        int i, j, k;
+        for(i = index; i < num.length; ++i){
+            if(i != index && num[i] == num[i - 1]) continue;
+            cur.add(num[i]);
+            r(re, cur, i + 1, num, n - 1);
+            cur.remove(cur.size() - 1);
+        }
+    }
+    public ArrayList<ArrayList<Integer>> subsetsWithDup(int[] num) {
+        Arrays.sort(num);
+        ArrayList<ArrayList<Integer>> re = new ArrayList<ArrayList<Integer>>();
+        ArrayList<Integer> cur = new ArrayList<Integer>();
+        for(int i = 0; i <= num.length; ++i){
+            r(re, cur, 0, num, i);
+        }
+        return re;
+    }
+}
+//http://oj.leetcode.com/problems/decode-ways/
+public class Solution {
+    public int numDecodings(String s) {
+        int i, j, k, n = s.length();
+        if(n == 0 || s.charAt(0) == '0') return 0;
+        int[] f = new int[n + 1];
+        f[n] = 1;
+        for(i = n - 1; i >= 0; --i){
+            f[i] = 0;
+            if(s.charAt(i) != '0') f[i] += f[i + 1];
+            if(i < n - 1 && (s.charAt(i) == '1' || (s.charAt(i) == '2' && s.charAt(i + 1) <= '6'))) {
+                f[i] += f[i + 2];
+            }
+        }
+        return f[0];
+    }
+}
