@@ -1,29 +1,29 @@
 package feb_2014;
 
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Arrays;
+import java.util.Collections;
 
 public class Solution {
-    public int search(int[] A, int target) {
-        int i, j, k, low, high, mid, n = A.length;
-        low = 0; high = n - 1;
-        while(low <= high){
-            mid = (low + high) / 2;
-            if(A[mid] == target) return mid;
-            else if(A[mid] < target){
-                if((A[mid] < A[high] && A[high] >= target) || (A[mid] > A[high] && A[high] <= target)) low = mid + 1;
-                else high = mid - 1;
-            } else {
-                if((A[mid] > A[low] && A[low] <= target)|| (A[mid] < A[low] && A[low] >= target)) high = mid - 1;
-                else low = mid + 1;
-            }
+    private void r(ArrayList<ArrayList<Integer>> re, ArrayList<Integer> cur, int[] c, int index, int target){
+        if(target == 0){
+            ArrayList<Integer> t = new ArrayList<Integer>(cur);
+            Collections.reverse(t);
+            re.add(t);
+            return;
         }
-        return -1;
+        for(int i = index; i >= 0; --i){
+        	if(target < c[i]) break;
+        	cur.add(c[i]);
+        	r(re, cur, c, i, target - c[i]);
+        	cur.remove(cur.size() - 1);
+        }
     }
-    public static void main(String[] args) {
-		Solution sol = new Solution();
-		int[] A = {4,5,6,7,8,1,2,3};
-		int target = 8;
-		System.out.println(sol.search(A, target));
-	}
+    public ArrayList<ArrayList<Integer>> combinationSum(int[] candidates, int target) {
+        Arrays.sort(candidates);
+        ArrayList<ArrayList<Integer>> re = new ArrayList<ArrayList<Integer>>();
+        ArrayList<Integer> cur = new ArrayList<Integer>();
+        r(re, cur, candidates, candidates.length - 1, target);
+        return re;
+    }
 }
