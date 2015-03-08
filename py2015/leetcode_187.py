@@ -5,7 +5,6 @@ class Solution:
     def findRepeatedDnaSequences(self, s):
         d = {}
         li = []
-        print len(s) - 9
         for i in range(0, len(s) - 9):
             cs = s[i:i + 10]
             if cs in d:
